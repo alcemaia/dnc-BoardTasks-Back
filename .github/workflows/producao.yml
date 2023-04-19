@@ -1,0 +1,78 @@
+name: Pipeline de Produção #configuração de variável de ambiente
+env:
+NODE_ENV: production
+VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID}}
+VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID}}
+
+
+# gatilho que vai acionar a Pipeline
+on: 
+  push:
+    branches:
+      -main
+
+jobs:
+
+
+  job1:
+    name: CI - Build e criação do artefato #nome da etapa
+    runs-on: ubuntu-latest #no windows seri windows-latest?
+    steps:
+      - name: Pegar código do Repositório
+        uses: actions0checkout@v3 #biblioteca do github actions
+
+      - name: instalando pacotes no npm #como se estivesse dando git clone
+        run: npm install
+
+      - name: Gerando documentação do swagger.json
+        run: npm run autoDoc
+
+      - name: Apagando pasta node_modules
+        run:  rn -rf node_modules
+
+      - name: Apagando pasta .git
+        run: rn -rf .git
+
+      - name: Arquivos e pastas #opcional
+        run: dir #comando para digitar no terminal windows no linux seria o ls
+
+      - name: Criando artefato Zip do código buildado #depois de todas essas etapas vão ficar vários arquivos e pastas e aqui vai zipar tudo e faz uploaded para a núvem do github
+        uses: actions/upload-artefact@v3 #biblioteca para zippar
+        with:
+          name: artefato
+          retention-days: 1 #prazo de quantos dias o artefato vai durar. vai apagar o código temporario que foi gerado no build
+          path: ./
+
+
+
+job2:
+  name: CD - Deploy na Vercel
+  needs: job1 #informa se tem uma dependencia, se precisa aguardar outro job executar antes de ele execute
+  runs-on: ubuntu-latest #no windows seri windows-latest?
+  steps:
+    - name: Baixando artefato do código buildado
+      uses: actions/download-artefact@v3
+      with: #configuração da biblioteca
+        name: artefato #nome da pasta zippada
+
+    - name: Instalando pacotes do npm
+      uses: npm install
+
+    - name: Arquivos e pastas do artefato
+      run: dir #linux utiliza ls existe o nome das pastas atuais
+
+    - name: Instalando CLI da Vercel #aplicativo que roda no terminal
+      run: npm install --global vercel@latest
+
+    - name: Buscando informações de ambiente no Vercel
+      run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} #puxa alguns informações sobre o projeto
+
+    - name: Buildando artefatos do projeto
+      run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+    - name: Deploy de artefatos do projeto na vercel
+      run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+
+
+
