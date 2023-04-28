@@ -1,7 +1,7 @@
 const express = require('express');
 const tratarErrosEsperados = require('../functions/tratarErrosEsperados');
 const conectarBancoDados = require('../middleware/conectarBD');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); 
 const jwt = require('jsonwebtoken')
 const EsquemaUsuario = require('../models/usuario');
 const router = express.Router();
@@ -11,9 +11,11 @@ router.post('/criar', conectarBancoDados, async function(req, res) { /*metodo do
   try {
     // #swagger.tags = ['Usuario']
     let {nome, email, senha} = req.body; /*objeto com as propriedade da body que vai receber nome, email e senha*/
-    const numeroVezesHash = 10;
-    const senhaHash = await bcrypt.hash(senha, numeroVezesHash);
-    const respostaBD = await EsquemaUsuario.create({nome, email, senha: senhaHash});
+    const numeroVezesHash = 10; /*numero de vezes que a criptografia da Hash precisa passar*/
+    const senhaHash = await bcrypt.hash(senha, numeroVezesHash); /*bcript biblioteca node module*/
+    const respostaBD = await EsquemaUsuario.create({nome, email, senha: senhaHash}); 
+
+    //resposta para o front end
 
     res.status(200).json({
       status: "OK",
@@ -22,7 +24,7 @@ router.post('/criar', conectarBancoDados, async function(req, res) { /*metodo do
     })
 
   } catch (error) {
-    if(String(error).includes("email_1 dup key")){
+    if(String(error).includes("email_1 dup key")){ /*e-mail duplicado*/
       return tratarErrosEsperados(res, "Error: Já existe uma conta com esse e-mail!");
     }
     return tratarErrosEsperados(res, error);
@@ -30,13 +32,13 @@ router.post('/criar', conectarBancoDados, async function(req, res) { /*metodo do
 });
 
 
-
-router.post('/logar', conectarBancoDados, async function (req, res) {
+// estrutura para logar o usuário
+router.post('/logar', conectarBancoDados, async function (req, res) { /*começando um novo endpoint na api*/
   try {
     // #swagger.tags = ['Usuario']
     let { email, senha } = req.body;
 
-    let respostaBD = await EsquemaUsuario.findOne({ email }).select('+senha');
+    let respostaBD = await EsquemaUsuario.findOne({ email }).select('+senha'); /*findOnd vai buscar uma informação no banco de dados. o .select faz com que o campo senha apareça nessa requisição*/
     if (respostaBD) {
 
       let senhaCorreta = await bcrypt.compare(senha, respostaBD.senha);
