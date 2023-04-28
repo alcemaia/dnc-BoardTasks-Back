@@ -7,10 +7,10 @@ const EsquemaUsuario = require('../models/usuario');
 const router = express.Router();
 
 
-router.post('/criar', conectarBancoDados, async function(req, res) {
+router.post('/criar', conectarBancoDados, async function(req, res) { /*metodo do api post - criar algo*/
   try {
     // #swagger.tags = ['Usuario']
-    let {nome, email, senha} = req.body;
+    let {nome, email, senha} = req.body; /*objeto com as propriedade da body que vai receber nome, email e senha*/
     const numeroVezesHash = 10;
     const senhaHash = await bcrypt.hash(senha, numeroVezesHash);
     const respostaBD = await EsquemaUsuario.create({nome, email, senha: senhaHash});

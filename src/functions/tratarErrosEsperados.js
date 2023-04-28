@@ -11,7 +11,7 @@ function tratarErrosEsperados(res, err) {
     });
   }
 
-//   Pode ser um erro definito manualmente por min
+//   Pode ser um erro definido manualmente por min
   if (String(err).includes(`Error:`)) {
     return res.status(400).json({
       status: "Erro",
