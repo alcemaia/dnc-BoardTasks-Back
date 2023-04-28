@@ -1,4 +1,4 @@
-const S = require('string');
+const S = require('string'); /*requisitando uma biblioteca chamada string*/
 
 function tratarErrosEsperados(res, err) {
 
