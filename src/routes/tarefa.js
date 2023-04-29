@@ -72,7 +72,7 @@ router.get('/obter/usuario', authUser, conectarBancoDados, async function (req, 
   }
 });
 
-
+//api para deletar a tarefa
 router.delete('/deletar/:id', authUser, conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Tarefa']
@@ -80,7 +80,7 @@ router.delete('/deletar/:id', authUser, conectarBancoDados, async function (req,
     const usuarioLogado = req.usuarioJwt.id;
 
     const checkTarefa = await EsquemaTarefa.findOne({ _id: idTarefa, usuarioCriador: usuarioLogado });
-    if (!checkTarefa) {
+    if (!checkTarefa) { // chegar se a tarefa existe e se é atribuida ao usuário logado
       throw new Error("Tarefa não encontrada ou pertence a outro usuário");
     }
 
