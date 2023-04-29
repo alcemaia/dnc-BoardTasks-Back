@@ -14,7 +14,7 @@ const esquema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    status: { /*qual estatos a tarefa está */
+    status: { /*qual estados a tarefa está */
       type: String,
       required: 'é obrigatório!',
     },
