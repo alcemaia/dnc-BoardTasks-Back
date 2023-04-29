@@ -25,7 +25,7 @@ router.post('/criar', authUser, conectarBancoDados, async function (req, res) {
 });
 
 
-router.put('/editar/:id', authUser, conectarBancoDados, async function (req, res) {
+router.put('/editar/:id', authUser, conectarBancoDados, async function (req, res) { //put outro metodo de requisição :id parametro recebido através da url da api 
   try {
     // #swagger.tags = ['Tarefa']
     let idTarefa = req.params.id;
