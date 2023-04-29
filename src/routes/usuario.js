@@ -41,12 +41,13 @@ router.post('/logar', conectarBancoDados, async function (req, res) { /*começan
     let respostaBD = await EsquemaUsuario.findOne({ email }).select('+senha'); /*findOnd vai buscar uma informação no banco de dados. o .select faz com que o campo senha apareça nessa requisição*/
     if (respostaBD) {
 
-      let senhaCorreta = await bcrypt.compare(senha, respostaBD.senha);
+      let senhaCorreta = await bcrypt.compare(senha, respostaBD.senha); //Comparar senhas bcrypt 
       if (senhaCorreta) {
         
-        let token = jwt.sign({ id: respostaBD._id }, process.env.JWT_SECRET, { expiresIn: '1d' })
-
-        res.header('x-auth-token', token);
+        let token = jwt.sign({ id: respostaBD._id }, process.env.JWT_SECRET, { expiresIn: '1d' }) //criação do Token - todas as outras api que vão necessitar da autenticação do usuário terão que enviar esse token 
+//jwt é uma biblioteca que faz geração de token (jwt critografia de informações e descriptografia de informações)
+//expiresIN quanto tempo esse token vai durar - expirar
+        res.header('x-auth-token', token); 
         res.status(200).json({
           status: "OK",
           statusMensagem: "Usuário autenticado com sucesso.",
