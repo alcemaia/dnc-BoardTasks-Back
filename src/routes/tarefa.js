@@ -52,13 +52,14 @@ router.put('/editar/:id', authUser, conectarBancoDados, async function (req, res
   }
 });
 
-
+//get para obter informações do banco de dados 
 router.get('/obter/usuario', authUser, conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Tarefa']
     // #swagger.description = "Endpoint para obter todas tarefas do usuario logado."
+    //quando está utilizando o metodo get a gente não consegue receber os parametros via body - pelo corpo da requisição
     const usuarioLogado = req.usuarioJwt.id;
-    const respostaBD = await EsquemaTarefa.find({ usuarioCriador: usuarioLogado }).populate('usuarioCriador');
+    const respostaBD = await EsquemaTarefa.find({ usuarioCriador: usuarioLogado }).populate('usuarioCriador'); //find retorna vários itens que ele achar
 
     res.status(200).json({
       status: "OK",
