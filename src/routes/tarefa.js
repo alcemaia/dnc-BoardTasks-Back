@@ -28,18 +28,18 @@ router.post('/criar', authUser, conectarBancoDados, async function (req, res) {
 router.put('/editar/:id', authUser, conectarBancoDados, async function (req, res) { //put outro metodo de requisição :id parametro recebido através da url da api 
   try {
     // #swagger.tags = ['Tarefa']
-    let idTarefa = req.params.id;
+    let idTarefa = req.params.id; //vai receber o valor do parâmentro que vem através da url 
     let { posicao, titulo, descricao, status, dataEntrega } = req.body;
     const usuarioLogado = req.usuarioJwt.id;
 
-    const checkTarefa = await EsquemaTarefa.findOne({ _id: idTarefa, usuarioCriador: usuarioLogado });
-    if (!checkTarefa) {
+    const checkTarefa = await EsquemaTarefa.findOne({ _id: idTarefa, usuarioCriador: usuarioLogado }); //findOne vai objter um único item no banco de dado e o restante são as condições para achar no banco de dados
+    if (!checkTarefa) { //vai checar se a tarefa veio sem nada ou porque pertence a outro usuário
       throw new Error("Tarefa não encontrada ou pertence a outro usuário");
     }
 
     const tarefaAtualizada = await EsquemaTarefa.updateOne({ _id: idTarefa }, { posicao, titulo, descricao, status, dataEntrega });
     if (tarefaAtualizada?.modifiedCount > 0) {
-      const dadosTarefa = await EsquemaTarefa.findOne({ _id: idTarefa }).populate('usuarioCriador');
+      const dadosTarefa = await EsquemaTarefa.findOne({ _id: idTarefa }).populate('usuarioCriador'); //populate função do mongoose
 
       res.status(200).json({
         status: "OK",
