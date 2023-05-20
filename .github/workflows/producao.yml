@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest #no windows seri windows-latest?
     steps:
       - name: Pegar código do Repositório
-        uses: actions0checkout@v3 #biblioteca do github actions
+        run: actions0checkout@v3 #biblioteca do github actions
 
       - name: instalando pacotes no npm #como se estivesse dando git clone
         run: npm install
