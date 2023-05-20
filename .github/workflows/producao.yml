@@ -56,7 +56,7 @@ job2:
         name: artefato #nome da pasta zippada
 
     - name: Instalando pacotes do npm
-      uses: npm install
+      run: npm install
 
     - name: Arquivos e pastas do artefato
       run: dir #linux utiliza ls existe o nome das pastas atuais
